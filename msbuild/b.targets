@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
+
+  <Target Name="Echo">
+    <Message Importance="high"
+ Text="Echo $([System.DateTime]::Now.Ticks)..." />
+  </Target>
+
+  <Target Name="WriteFile">
+    
+    <!--MakeDir Directories="$([System.IO.Path]::GetDirectoryName($(BuildNumberMSBuildFile)))" /-->
+    
+      <PropertyGroup>
+      
+        <VersionLines>
+        
+          <![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+
+    <BuildNumberMajor>$(BuildNumberMajor)</BuildNumberMajor>
+    
+    <BuildNumberMinor>$(BuildNumberMinor)</BuildNumberMinor>
+  
+  </PropertyGroup>
+
+</Project>
+        
+             ]]>
+      
+        </VersionLines>
+    
+      </PropertyGroup>
+    
+
+      <Message Importance="high"
+ Text="Writing $(BuildNumberMSBuildFile)" />
+    
+
+      <WriteLinesToFile File="$(BuildNumberMSBuildFile)"
+                      
+                        Lines="$(VersionLines)"
+                      
+                        Encoding="utf-8"
+                      
+                        Overwrite="true" />
+  
+  </Target>
+
+</Project>

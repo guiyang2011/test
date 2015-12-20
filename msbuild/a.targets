@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"  
+	ToolsVersion="4.0" 
+	DefaultTargets="Build">
+
+  <PropertyGroup>
+     <Root>D:\mywork\msbuild</Root>
+      <BuildNumberMSBuildFile>$(Root)\buildnumber.targets</BuildNumberMSBuildFile>
+      <BuildNumberMSBuildFile2>$(Root)\buildnumber2.targets</BuildNumberMSBuildFile2>
+      <BuildNumberMajor>24817</BuildNumberMajor>
+      <BuildNumberMinor>00</BuildNumberMinor>
+  </PropertyGroup>
+
+  <Target Name="ChangeProperty">
+      <CreateProperty Value="99998">
+        <Output TaskParameter="Value" PropertyName="BuildNumberMajor" />
+      </CreateProperty>
+      <Message Text="BuildNumberMajor: $(BuildNumberMajor)" Importance="high" />
+  </Target>
+ 
+  <Target Name="Build">
+    <Message Text="Start BuildCore...$(BuildNumberMajor)..." Importance="high" />
+    <CallTarget Targets="BuildCore" />
+    <CallTarget Targets="ChangeProperty" />
+    <CallTarget Targets="BuildCore" />
+  </Target>
+
+  <Target Name="BuildCore"
+          Condition="true"      
+                       >
+    <Message Text="Start Build ..." Importance="high" />
+    <MSBuild Projects="$(Root)\b.targets"  
+             Targets="WriteFile" 
+             Properties="BuildNumberMajor=$(BuildNumberMajor);BuildNumberMinor=$(BuildNumberMinor);BuildNumberMSBuildFile=$(BuildNumberMSBuildFile)"
+     />
+
+    <!--<Delete Files="$(BuildNumberMSBuildFile)" />-->
+
+  </Target>
+
+  <Target Name="AfterBuildCore" AfterTargets="BuildCore">
+    <Message Text="Start AfterBuildCore ...$(BuildNumberMajor)..." Importance="high" />
+    <MSBuild Projects="$(Root)\b.targets"  
+             Targets="WriteFile" 
+             Properties="BuildNumberMajor=$(BuildNumberMajor);BuildNumberMinor=$(BuildNumberMinor);BuildNumberMSBuildFile=$(BuildNumberMSBuildFile)"
+     />
+
+  </Target>
+
+  <Target Name="PreBuildCore" BeforeTargets="BuildCore">
+
+    
+    <Message Text="Start PreBuild ..." Importance="high" />
+  </Target>
+
+</Project>
